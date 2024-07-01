@@ -1,5 +1,6 @@
 import express from "express";
 import { crawlPage } from "./crawl.js";
+import { handleError } from "puppeteer";
 
 const app = express();
 
@@ -10,23 +11,16 @@ app.get("/getCrawledData", async (req, res) => {
         if (status === 200) {
             res.status(200).send(data);
         } else {
-            res.status(status).send({
-                statusCode: status,
-                message: message,
-            });
+            res.status(status).send(handleError(message, status));
         }
     } catch (error) {
         console.error(`Error in /getCrawlData: ${error.message}`);
-        res.status(500).send({
-            statusCode: 500,
-            message: "An error occurred while fetching data",
-        });
+        res.status(500).send(handleError("An error occurred while fetching data", 500));
     }
 });
 
-
 app.all("*", (req, res) => {
-    res.status(404).send("No Resource Found!")
+    res.status(404).send(handleError("No Resource Found!", 404))
 })
 
 const port = process.env.PORT || 8000;
