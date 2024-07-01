@@ -3,20 +3,12 @@ import { crawlPage } from "./crawl.js";
 
 const app = express();
 
-app.get("/getCrawlData", async (req, res) => {
+app.get("/getCrawledData", async (req, res) => {
     const url = req.query.targetUrl;
-    console.log(url);
-
     try {
         const { status, data, message } = await crawlPage(url);
-        console.log(data);
-
         if (status === 200) {
-            res.status(200).send({
-                statusCode: 200,
-                response: data,
-                message: "Data fetched successfully",
-            });
+            res.status(200).send(data);
         } else {
             res.status(status).send({
                 statusCode: status,
