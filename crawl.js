@@ -17,6 +17,9 @@ const fetchDataUsingPuppeteer = async (url) => {
         });
         const page = await browser.newPage();
         await page.goto(url);
+        await page.waitForNavigation({
+            waitUntil: 'networkidle0',
+          })
         const html = await page.evaluate(() => document.documentElement.outerHTML);
         await browser.close();
         return html;
